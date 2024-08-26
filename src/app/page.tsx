@@ -8,6 +8,9 @@ export default function RegisterForm() {
   const [buyShoes, setBuyShoes] = useState(false);
   const [buyCap, setBuyCap] = useState(false);
 
+  const [plan, setPlan] = useState("");
+  const [gender, setGender] = useState("");
+
   const inputFnameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFname(event.target.value);
   };
@@ -16,10 +19,46 @@ export default function RegisterForm() {
     setLname(event.target.value);
   };
 
-  const computeTotalPayment = () => {};
+  const selectPlanOnChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setPlan(event.target.value);
+  };
+
+  const radioGenderMaleOnChange = () => {
+    setGender("male");
+  };
+
+  const radioGenderFemaleOnChange = () => {
+    setGender("female");
+  };
+
+  const checkboxBottleOnChange = () => {
+    setBuyBottle(!buyBottle);
+  };
+
+  const checkboxShoesOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBuyShoes(event.target.checked);
+  };
+
+  const checkboxCapOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBuyCap(event.target.checked);
+  };
+
+  const computeTotalPayment = () => {
+    let totalPayment = 0;
+    if (plan === "funrun") totalPayment +=500;
+    else if (plan === "mini") totalPayment +=800;
+    else if (plan === "half") totalPayment +=1200;
+    else if (plan === "full") totalPayment +=1500;
+
+    if (buyBottle) totalPayment +=200;
+    if (buyShoes) totalPayment +=600;
+    if (buyCap) totalPayment +=400;
+
+    return totalPayment;
+  };
 
   const registerBtnOnClick = () => {
-    alert(`Registration complete. Please pay money for ... THB.`);
+    alert(`Registration complete. Please pay money for ${computeTotalPayment().toLocaleString()} THB.`);
   };
 
   return (
@@ -52,38 +91,47 @@ export default function RegisterForm() {
           Mini Marathon 10 Km (800 THB)
           Half Marathon 21 Km (1,200 THB)
           Full Marathon 42.195 Km (1,500 THB) */}
+          <select className = "form-select" onChange = {selectPlanOnChange} value={plan} >
+              <option value="">Please Select...</option>
+              <option value="funrun">Fun run 5.5 Km (500 THB)</option>
+              <option value="mini">Mini Marathon 10 Km (800 THB)</option>
+              <option value="half">Half Marathon 21 Km (1,200 THB)</option>
+              <option value="full">Full Marathon 42.195 Km (1,500 THB)</option>
+          </select>
       </div>
+      {plan}
 
       {/* Gender */}
       <div>
         <label className="form-label">Gender</label>
         <div>
-          <input className="me-2 form-check-input" type="radio" />
+          <input className="me-2 form-check-input" type="radio" onChange={radioGenderMaleOnChange} checked={gender == "male"} />
           Male 👨
-          <input className="mx-2 form-check-input" type="radio" />
+          <input className="mx-2 form-check-input" type="radio" onChange={radioGenderFemaleOnChange} checked={gender == "female"}/>
           Female 👩
         </div>
       </div>
+      {gender}
 
       {/* Extra Items */}
       <div>
         <label className="form-label">Extra Item(s)</label>
         <div>
-          <input className="form-check-input" type="checkbox" />{" "}
+          <input className="form-check-input" type="checkbox" onChange={checkboxBottleOnChange}/>{" "}
           <label className="form-check-label">Bottle 🍼 (200 THB)</label>
         </div>
         <div>
-          <input className="form-check-input" type="checkbox" />{" "}
+          <input className="form-check-input" type="checkbox" onChange={checkboxShoesOnChange}/>{" "}
           <label className="form-check-label">Shoes 👟 (600 THB)</label>
         </div>
         <div>
-          <input className="form-check-input" type="checkbox" />{" "}
+          <input className="form-check-input" type="checkbox" onChange={checkboxCapOnChange}/>{" "}
           <label className="form-check-label">Cap 🧢 (400 THB)</label>
         </div>
       </div>
 
       {/* Total Payment */}
-      <div>Total Payment : ... THB</div>
+      <div>Total Payment : {computeTotalPayment().toLocaleString()} THB</div>
 
       {/* Register Button */}
       <button className="btn btn-success my-2" onClick={registerBtnOnClick}>
